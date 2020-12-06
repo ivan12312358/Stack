@@ -1,157 +1,174 @@
 #include <stdio.h>
 #include <stdlib.h>
-enum error {
-	stack_ok,
-	w_value_cap,
-	w_value_size,
-	w_type_cap,
-	size_lrg_cap,
-	w_type_elem
-};
+#line 4
 
-typedef struct {
-    int* elements;
-    int size;
-    int capacity;
-} Stack;
+#define ASSERT_OK(stack, str_num)			\
+	error = verification(stack);			\
+	if(error != 0){							\
+		stack_dump(stack, error, str_num);	\
+	}										\
 
-int constructor(Stack* stack);
-void stack_dump(Stack* stack);
-int verification(Stack* stack);
-int cap_change(Stack* stack, int mode);
-int push(int elem, Stack* stack);
-int pop(Stack* stack);
-int destructor(Stack* stack);
-int poison = -666;
+int verification(Stack* stack){	
+	long long summ = 0;
+    for (int i = 1; i <= stack->size; i++) {
+    	summ += stack->elem[i]*((canary + i)%7)*i;
+    }
 
-
-int main() {
-	Stack stack;
-
-    constructor(&stack);
-    
-    destructor(&stack);
-
-    return 0;
+	if(stack->capacity <= 0 || stack->capacity >= max_value) {
+		return w_value_cap;
+	} else if(stack->size < 0 || stack->size >= max_value) {
+		return w_value_size;
+	} else if(stack->size >= stack->capacity) {
+		return size_lrg_cap;
+	} else if(stack->chop1 != canary) {
+		return w_value_chop1;
+	} else if(stack->chop2 != canary) {
+		return w_value_chop2;
+	} else if(stack->elem == NULL){
+		return null_ptr;
+	} else if(stack->elem[0] != canary) {
+		return w_value_canary1;
+	} else if(stack->elem[stack->capacity + 1] != canary){
+		return w_value_canary2;
+	} else if(summ != stack->hash_summ)
+		return w_val_hsh_sm;
+	return stack_ok;
 }
 
-void stack_dump(Stack* stack) {
-	printf("stack_dump:\n");
-	printf("stack_status:");
-	switch(verification(stack)) {
+void stack_dump(Stack* stack, int error, int str_num){
+	printf("\t\tSTACK DUMP\n");
+	printf("stack_status:\n");
+	printf("Verification failed on %d string\n", str_num);
+	switch(error) {
 		case(stack_ok):
 			printf("Stack_OK\n");
 			break;
 		case(w_value_cap):
-			printf("Stack_BAD:\tInvalid value of capacity\n");
+			printf("Invalid value of capacity\n");
 			break;
 		case(w_value_size):
-			printf("Stack_BAD:\tInvalid value of size\n");
-			break;
-		case(w_type_cap):
-			printf("Stack_BAD:\tWrong type of capacity\n");		
+			printf("Invalid value of size\n");
 			break;
 		case(size_lrg_cap): 
-			printf("Stack_BAD:\n\t\tThe number of stack elements more than stack capacity\n");
+			printf("The number of stack elements more than stack capacity\n");
 			break;
-		case(w_type_elem):
-			printf("Stack_BAD:\n\t\tWrong type of data\n");
-			printf("stack.elem[%d] = %d",  stack->size - 1, stack->elements[stack->size - 1]);
+		case(w_value_chop1):
+			printf("Left canary of struct is spoiled\n");
+			break;
+		case(w_value_chop2):
+			printf("Right canary of struct is spoiled\n");
+			break;
+		case(null_ptr):
+			printf("Pointer to the elements equal to zero\n");
+			break;	
+		case(w_value_canary1):
+			printf("Left canary of elements is spoiled\n");
+			break;
+		case(w_value_canary2):
+			printf("Right canary of elements is spoiled\n");
+			break;
+		case(w_val_hsh_sm):
+			printf("Invalid value of hash summ\n");
 			break;
 		default:;
 	}
-	printf("\tSize: %d\n\tCapacity: %d\n", stack->size, stack->capacity);
-	if(stack->size != 0) { 
-		for (int i = 0; i < stack->capacity; i++) {
-			printf("\t\tstack.elem[%d] = %d\n", i, stack->elements[i]);
+	printf("Size: %d\nCapacity: %d\nHash summ: %lld\n", stack->size, stack->capacity, stack->hash_summ);
+	if(stack->size != 0 && stack->elem != NULL) { 
+		for (int i = 0; i < stack->capacity + 2; i++) {
+			printf("\tstack.elem[%d] = %lld\n", i, stack->elem[i]);
 		}
-	}
-	
+	}	
 }
 
-int verification(Stack* stack) {
-	
-	if(stack->capacity <= 0) {
-		return w_value_cap;
-	} else if(stack->size < 0) {
-		return w_value_size;
-	} else if(sizeof(stack->capacity) != sizeof(int)) {
-		return w_type_cap;
-	} else if(stack->size > stack->capacity) {
-		return size_lrg_cap;
-	} else if(stack->size != 0 && sizeof(stack->elements[stack->size - 1]) != sizeof(int)) {
-		return w_type_elem;
-	} else {
-		return stack_ok;	
-	}
-	return 0;
-}
-
-int constructor(Stack* stack) {
-	
+void constructor(Stack* stack){
+	stack->chop1 = canary;
 	stack->size = 0;
-	scanf("%d", &stack->capacity);
-	
-	
-	stack->elements = (int*)calloc(stack->capacity, sizeof(int));
-	for(int i = 0; i < stack->capacity; i++) {
-		stack->elements[i] = poison; 
-	}
-		stack_dump(stack);
+	stack->hash_summ = 0;
+	stack->chop2 = canary;
 
-	int elem;
-	while(scanf("%d", &elem) == 1) {
-		if(stack->size == stack->capacity) {
-			cap_change(stack, 1);
+	printf("Enter size of stack:\t");
+
+	if(scanf("%d", &stack->capacity) == 1);
+		stack->elem = (long long int*)calloc(stack->capacity + 2, sizeof(long long int));{
+	}
+	
+	stack->elem[0] = canary;
+	stack->elem[stack->capacity + 1] = canary;
+
+	for(int i = 1; i < stack->capacity + 1; i++){
+		stack->elem[i] = poison;
+	}
+
+	long long elem = 0;
+	printf("Enter elements of stack:\n");
+
+	while(scanf("%lld", &elem) == 1){
+		if(stack->capacity == stack->size + 1){
+			cap_change(stack);
 		}
-		push(elem, stack);
+		push(stack, elem);
 	}
-	if(stack->size < stack->capacity) {
-		cap_change(stack, -1);		
-	}
-
-	return 0;
+	cap_change(stack);
 }
 
-int cap_change(Stack* stack, int mode) {
-	Stack* old_stack = stack;
-	if(mode == 1) {
-		stack->capacity *= 2;
-		stack->elements = (int*)realloc(stack->elements, stack->capacity*sizeof(int));
-		for(int i = stack->size; i < stack->capacity; i++) {
-			stack->elements[i] = poison;
-		}
-	} else if(mode == -1) {
-		stack->capacity = stack->size;
-		stack->elements = (int*)realloc(stack->elements, (stack->capacity)*sizeof(int));
+void cap_change(Stack* stack){
+	int error;
+	ASSERT_OK(stack, __LINE__)
+	long long* tmp = NULL;
+
+	if(stack->capacity == stack->size + 1){
+		stack->capacity += 5;
+
+		tmp = (long long*)realloc(stack->elem, (stack->capacity + 2)*sizeof(long long));
+
+	} else if(stack->size < stack->capacity){
+		stack->capacity = stack->size + 1;
+		
+		tmp = (long long*)realloc(stack->elem, (stack->capacity + 2)*sizeof(long long));		
 	} else {
-		return -1;
+		return;
 	}
-	if(old_stack->elements != stack->elements) {
-		destructor(old_stack);
+
+	if(tmp != NULL){
+		stack->elem = tmp;
+		stack->elem[stack->capacity + 1] = canary;
+		for(int i = stack->size + 1; i < stack->capacity + 1; i++){
+			stack->elem[i] = poison;
+		}
+
+	} else {
+		printf("Failed to reallocate\n");
 	}
-	return 0;
 }
 
-int push(int elem, Stack* stack) {
-//	verification(stack);
-	stack->elements[stack->size++] = elem;
-	//verification(stack);
-	return 0;
+void push(Stack* stack, long long elem){
+	int error = 0;
+	ASSERT_OK(stack, __LINE__)
+	stack->elem[++stack->size] = elem;
+	stack->hash_summ += elem*((canary + stack->size)%7)*stack->size;
+	ASSERT_OK(stack, __LINE__)  
 }
 
-int pop(Stack* stack) {
-	//verification(stack);
-	return stack->elements[stack->size - 1];
+long long pop(Stack* stack){
+	int error = 0;
+	ASSERT_OK(stack, __LINE__)
+	long long x = stack->elem[stack->size--];
+	stack->hash_summ -= x*((canary + stack->size + 1)%7)*(stack->size + 1);
+	stack->elem[stack->size + 1] = poison;
+	ASSERT_OK(stack, __LINE__)
+	return x;
 }
 
-int destructor(Stack* stack) {
-	for(int i = 0; i < stack->size; i++) {
-		stack->elements[i] = poison;
+void destructor(Stack* stack){
+	int error = 0;
+	ASSERT_OK(stack, __LINE__)
+	
+	for(int i = 0; i < stack->size + 1; i++) {
+		stack->elem[i] = poison;
 	}
+
 	stack->size = poison;
 	stack->capacity = poison;
-	free(stack->elements);
-	stack->elements = NULL;
-	return 0;
+	
+	free(stack->elem);
 }
