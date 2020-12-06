@@ -4,9 +4,9 @@
 
 #define ASSERT_OK(stack, str_num)			\
 	error = verification(stack);			\
-	if(error != 0){							\
+	if(error != 0){					\
 		stack_dump(stack, error, str_num);	\
-	}										\
+	}						\
 
 int verification(Stack* stack){	
 	long long summ = 0;
@@ -73,6 +73,7 @@ void stack_dump(Stack* stack, int error, int str_num){
 		default:;
 	}
 	printf("Size: %d\nCapacity: %d\nHash summ: %lld\n", stack->size, stack->capacity, stack->hash_summ);
+	
 	if(stack->size != 0 && stack->elem != NULL) { 
 		for (int i = 0; i < stack->capacity + 2; i++) {
 			printf("\tstack.elem[%d] = %lld\n", i, stack->elem[i]);
@@ -135,7 +136,6 @@ void cap_change(Stack* stack){
 		for(int i = stack->size + 1; i < stack->capacity + 1; i++){
 			stack->elem[i] = poison;
 		}
-
 	} else {
 		printf("Failed to reallocate\n");
 	}
@@ -144,18 +144,26 @@ void cap_change(Stack* stack){
 void push(Stack* stack, long long elem){
 	int error = 0;
 	ASSERT_OK(stack, __LINE__)
+	
 	stack->elem[++stack->size] = elem;
+	
 	stack->hash_summ += elem*((canary + stack->size)%7)*stack->size;
+	
 	ASSERT_OK(stack, __LINE__)  
 }
 
 long long pop(Stack* stack){
 	int error = 0;
 	ASSERT_OK(stack, __LINE__)
+	
 	long long x = stack->elem[stack->size--];
+	
 	stack->hash_summ -= x*((canary + stack->size + 1)%7)*(stack->size + 1);
+	
 	stack->elem[stack->size + 1] = poison;
+	
 	ASSERT_OK(stack, __LINE__)
+	
 	return x;
 }
 
