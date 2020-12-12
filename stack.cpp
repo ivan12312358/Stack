@@ -4,18 +4,18 @@
 #include <string.h>
 #line 6
 
-#define ASSERT_OK(stack)					\
-do {										\
+#define ASSERT_OK(stack)				\
+do {							\
 	error = verification(stack);			\
-											\
-	if(error != 0){							\
-											\
+							\
+	if(error != 0){					\
+							\
 		printf("Verification failed"		\
 			" on %d string\n", __LINE__);	\
-											\
-		stack_dump(stack, error);			\
-	}										\
-} while(0);									\
+							\
+		stack_dump(stack, error);		\
+	}						\
+} while(0);						\
 
 int verification(Stack* stack){	
 	
