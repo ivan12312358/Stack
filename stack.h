@@ -1,4 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #pragma once
+
 const long long poison = -666;
 const int max_value = 2147483637;
 const long long canary = 0x2237EA177;
