@@ -1,13 +1,16 @@
+#pragma once
 const long long poison = -666;
 const int max_value = 2147483637;
-const long long canary = 0x2237E4177;
+const long long canary = 0x2237EA177;
+const int canary_size = 4; 
+const int decrement = 5;
 
 typedef struct{
 	long long chop1;
 	int capacity;
 	int size;
+	int* elem;
 	long long hash_summ;
-	long long* elem;
 	long long chop2;
 }Stack;
 
@@ -24,10 +27,24 @@ enum error {
 	w_val_hsh_sm
 };
 
-void push(Stack* stack, long long elem);
+
+////The function create stack////
 void constructor(Stack* stack);
+
+////The function checks the stack data////
 int verification(Stack* stack);
-void stack_dump(Stack* stack, int error, int str_num);
+
+////The function prints stack data and errors////
+void stack_dump(Stack* stack, int error);
+
+////The function change stack capacity////
 void cap_change(Stack* stack);
-long long pop(Stack* stack);
+
+////The function puts an element on the stack////
+void push(Stack* stack, int elem);
+
+////The function returns an element from the stack////
+int pop(Stack* stack);
+
+////The function destruct stack data////
 void destructor(Stack* stack);
