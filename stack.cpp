@@ -1,8 +1,5 @@
 #pragma once
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#line 6
+#line 3
 
 #define ASSERT_OK(stack)				\
 do {							\
