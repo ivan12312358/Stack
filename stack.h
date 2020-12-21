@@ -1,13 +1,8 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#pragma once
-
-const long long poison = -666;
-const int max_value = 2147483637;
-const long long canary = 0x2237EA177;
-const int canary_size = 4; 
-const int decrement = 5;
+#include <time.h>
 
 typedef struct{
 	long long chop1;
@@ -39,7 +34,7 @@ void constructor(Stack* stack);
 int verification(Stack* stack);
 
 ////The function prints stack data and errors////
-void stack_dump(Stack* stack, int error);
+void stack_dump(Stack* stack);
 
 ////The function change stack capacity////
 void cap_change(Stack* stack);
@@ -52,3 +47,6 @@ int pop(Stack* stack);
 
 ////The function destruct stack data////
 void destructor(Stack* stack);
+
+///The function prints time in dump file////
+void time(const char* mode);
