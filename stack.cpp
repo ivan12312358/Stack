@@ -119,7 +119,7 @@ int verification(Stack* stack){
 
 void stack_dump(Stack* stack){
 
-	FILE* file = fopen("STACK_DUMP.txt", "a");
+	FILE* file = fopen("STACK_DUMP.log", "a");
 	
 	fprintf(file, "\t\tSTACK DUMP\n");	
 	
@@ -152,7 +152,7 @@ void stack_dump(Stack* stack){
 
 void time(const char* mode){
 
-	FILE* file = fopen("STACK_DUMP.txt", mode);
+	FILE* file = fopen("STACK_DUMP.log", mode);
 
 	time_t rawtime;
 	
