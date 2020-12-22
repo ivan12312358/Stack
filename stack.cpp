@@ -8,27 +8,27 @@ const long long canary = 0x2237EA177;
 const int canary_size = 4; 
 const int decrement = 5;
 
-#define ASSERT_OK(stack)					\
-do {										\
+#define ASSERT_OK(stack)				\
+do {							\
 	error = verification(stack);			\
-											\
-	if(error != 0){							\
-											\
+							\
+	if(error != 0){					\
+							\
 		printf("Verification failed"		\
 			" on %d string\n", __LINE__);	\
-											\
-		stack_dump(stack);					\
-	}										\
-} while(0);									\
+							\
+		stack_dump(stack);			\
+	}						\
+} while(0);						\
 
 
 #define case_of_switch(enum_const) 			\
-do {										\
-											\
-	case enum_const:						\
-	return #enum_const;						\
-											\
-} while(0);									\
+do {							\
+							\
+	case enum_const:				\
+	return #enum_const;				\
+							\
+} while(0);						\
 
 
 const char* test_error(int error){
