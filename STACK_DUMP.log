@@ -1,45 +1,33 @@
 
-Tue Dec 22 11:59:45 2020
+Tue Dec 22 12:34:35 2020
 
 Stack was created.
 
 		STACK DUMP
-Size: 19
-Capacity: 25
-Hash summ: 917746
+Status: 0xc7ac
+Size: 11
+Capacity: 12
+Hash summ: 5267
 Poison: -666
-Canary: 9185436023
-Stack Pointer: 0x7ffd18102000
+Canary: 0x2237ea177
+Stack Pointer: 0x1ffefffd70
 Stack elements:
 
 	stack.canary = 9185436023
-	stack.elem[0] = 12
-	stack.elem[1] = 412
-	stack.elem[2] = 51
-	stack.elem[3] = 25
-	stack.elem[4] = 125
-	stack.elem[5] = 12
-	stack.elem[6] = 5
-	stack.elem[7] = 125
-	stack.elem[8] = 1
-	stack.elem[9] = 25
-	stack.elem[10] = 12
-	stack.elem[11] = 51
-	stack.elem[12] = 25
-	stack.elem[13] = 1
-	stack.elem[14] = 25
-	stack.elem[15] = 126
-	stack.elem[16] = 12623
-	stack.elem[17] = 6
-	stack.elem[18] = 327
-	stack.elem[19] = -666
-	stack.elem[20] = -666
-	stack.elem[21] = -666
-	stack.elem[22] = -666
-	stack.elem[23] = -666
-	stack.elem[24] = -666
+	stack.elem[0] = 5
+	stack.elem[1] = 125
+	stack.elem[2] = 12
+	stack.elem[3] = 5
+	stack.elem[4] = 12
+	stack.elem[5] = 5
+	stack.elem[6] = 12
+	stack.elem[7] = 5
+	stack.elem[8] = 12
+	stack.elem[9] = 51
+	stack.elem[10] = 25
+	stack.elem[11] = -666
 	stack.canary = 9185436023
 
-Tue Dec 22 11:59:50 2020
+Tue Dec 22 12:34:45 2020
 
 Stack was deleted.

@@ -6,6 +6,7 @@
 
 typedef struct{
 	long long chop1;
+	long long status;
 	int capacity;
 	int size;
 	int* elem;

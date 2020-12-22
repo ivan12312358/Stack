@@ -7,28 +7,29 @@ const int max_value = 2147483637;
 const long long canary = 0x2237EA177;
 const int canary_size = 4; 
 const int decrement = 5;
+const long long genius = 0xC7AC;
 
-#define ASSERT_OK(stack)				\
-do {							\
+#define ASSERT_OK(stack)					\
+do {										\
 	error = verification(stack);			\
-							\
-	if(error != 0){					\
-							\
+											\
+	if(error != 0){							\
+											\
 		printf("Verification failed"		\
 			" on %d string\n", __LINE__);	\
-							\
-		stack_dump(stack);			\
-	}						\
-} while(0);						\
+											\
+		stack_dump(stack);					\
+	}										\
+} while(0);									\
 
 
 #define case_of_switch(enum_const) 			\
-do {							\
-							\
-	case enum_const:				\
-	return #enum_const;				\
-							\
-} while(0);						\
+do {										\
+											\
+	case enum_const:						\
+	return #enum_const;						\
+											\
+} while(0);									\
 
 
 const char* test_error(int error){
@@ -123,13 +124,15 @@ void stack_dump(Stack* stack){
 	
 	fprintf(file, "\t\tSTACK DUMP\n");	
 	
+	fprintf(file, "Status: %p\n", stack->status);
+
 	fprintf(file, "Size: %d\nCapacity: %d\n", stack->size, stack->capacity);
 	
 	fprintf(file, "Hash summ: %lld\n", stack->hash_summ);
 	
 	fprintf(file, "Poison: %d\n", poison);
 
-	fprintf(file, "Canary: %lld\n", canary);
+	fprintf(file, "Canary: %p\n", canary);
 
 	fprintf(file, "Stack Pointer: %p\n", stack);
 
@@ -178,8 +181,15 @@ void time(const char* mode){
 
 void constructor(Stack* stack){
 
+	if(stack->status == genius){
+
+		return;
+	}
+
 	int error = 0;
+
 	stack->chop1 = canary;
+	stack->status = genius;
 	stack->size = 0;
 	stack->hash_summ = 0;
 	stack->chop2 = canary;
@@ -292,12 +302,17 @@ void destructor(Stack* stack){
 	int error = 0;
 	ASSERT_OK(stack)
 	
-	for(int i = 0; i < stack->capacity + canary_size; i++)
+	for(int i = 0; i < stack->capacity + canary_size; i++){
+		
 		stack->elem[i] = poison;
+	}
 
+	stack->chop1 = poison;
+	stack->status = poison;
 	stack->size = poison;
 	stack->capacity = poison;
-	
+	stack->chop2 = poison;
+
 	free(stack->elem);
 
 	time("a");
